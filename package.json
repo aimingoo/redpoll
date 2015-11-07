@@ -1,0 +1,17 @@
+{
+  "name": "redpoll",
+  "description": "redpoll is implement of PEDT specifications in NodeJs.",
+  "author": {
+    "name": "aimingoo"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/aimingoo/redpoll.git"
+  },
+  "dependencies": {
+    "request": "^2.65.0"
+  },
+  "main": "Distributed.js",
+  "license": "Apache-2.0",
+  "version": "1.0.0"
+}

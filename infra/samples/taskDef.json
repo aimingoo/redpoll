@@ -1,0 +1,3 @@
+{
+  "x": { "run": "script:javascript:utf8:function() { return 'Hi!' }" }
+}
