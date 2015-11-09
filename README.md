@@ -3,6 +3,24 @@ redpoll is implement of PEDT - Parallel Exchangeable Distribution Task specifica
 
 PEDT v1.1 specifications supported.
 
+###Table of Contents
+  * [install](#install)
+  * [import and usage](#import-and-usage)
+  * [options](#options)
+  * [interfaces](#interfaces)
+    * [pedt.run](#pedtrun)
+    * [pedt.map](#pedtmap)
+    * [pedt.execute_task](#pedtexecute_task)
+    * [pedt.register_task](#pedtregister_task)
+    * [pedt.require](#pedtrequire)
+    * [pedt.upgrade](#pedtupgrade)
+  * [helpers](#helpers)
+    * [Redpoll.infra.taskhelper](#redpollinfrataskhelper)
+    * [Redpoll.infra.httphelper](#redpollinfrahttphelper)
+    * [Redpoll.infra.requestdata](#redpollinfrarequestdata)
+  * [testcase](#testcase)
+  * [history](#history)
+
 #install
 > npm install redpoll
 
@@ -83,11 +101,11 @@ upgrade current Redpoll/PEDT instance with newOptions. @see [options](#options)
 
 this is redpoll expanded interface.
 
-## helpers
+# helpers
 
 some tool/helpers include in the package.
 
-### Redpoll.infra.taskhelper
+## Redpoll.infra.taskhelper
 ```javascript
 var Redpoll = require('redpoll');
 var def = Redpoll.infra.taskhelper;
@@ -100,7 +118,7 @@ var taskDef = {
 a taskDef define helper. @see:
 > $(redpoll)/testcase/t_executor.js
 
-### Redpoll.infra.httphelper
+## Redpoll.infra.httphelper
 ```javascript
 var Redpoll = require('redpoll');
 var options = {
@@ -110,7 +128,7 @@ var options = {
 ```
 a recommented/standard distributed request.
 
-### Redpoll.infra.requestdata
+## Redpoll.infra.requestdata
 ```javascript
 var Redpoll = require('redpoll');
 var request_parse = Redpoll.infra.requestdata.parse;
