@@ -6,7 +6,7 @@
 //	> curl -s 'http://127.0.0.1:8032/redpoll/execute_task:c2eb2597e461aa3aa0e472f52e92fe0b'
 // -------------------------------------------------------------------------------------------------------
 var log = console.log.bind(console);
-var err = function(e) { console.log(e.stack||e) };
+var err = function(e) { console.log('=>', e.stack||e) };
 
 // pedt with simple register_center
 var PEDT = require('../Distributed.js');
@@ -17,7 +17,8 @@ var pedt = new PEDT({
 });
 
 // yes, the n4c is upgraded pedt, it's global reference
-var localTaskObject = require('./executor.js')
+var localTaskObject = require('./executor.js');
+var conf = {remote_logger_scope: 'n4c:/a/b/c/logger/nodes:*'};
 n4c = pedt
 
 // main()
@@ -26,18 +27,36 @@ function localTask(args) {
 	console.log('[INFO] arguments for loacalTask: ', args)
 	return "HELLO"
 }
-var reged_task = pedt.register_task(def.encode({
-	p1: 'default value',
-	info: def.run(localTask, {p1: 'new value'})
-}))
+function set_remote_logger(taskId) {
+	pedt.upgrade({ system_route: {
+		[pedt.LOGGER]: function(message) {  // a new remote logger
+			return this.map(conf.remote_logger_scope, taskId, {message: JSON.stringify(message)});
+		}
+	}})
+	return taskId
+}
+var reged_task = Promise.all([
+	// pedt.upgrade({ system_route: {[pedt.LOGGER]: Promise.resolve(false)}}),
+	// pedt.upgrade({ default_rejected: Promise.reject.bind(Promise) }),
+	// pedt.register_task(def.encode({promised: function(r){console.log(r.message); return true}})).then(set_remote_logger) // task_logger
+	pedt.register_task(def.encode({
+		p1: 'default value',
+		info: def.run(localTask, {p1: 'new value'})
+	})),
+	pedt.register_task('{}'), // task_blank
+	pedt.register_task(def.encode({promised: function(taskResult){return this.run(this.decode(this.encode(taskResult)))}})) // task_runner
+]);
 
 // - upgrade to unlimited
-var init_unlimited = pedt.run(localTaskObject).catch(err)
+var init_unlimited = pedt.run(localTaskObject);
 
 // - Done
 var worker = Promise.all([reged_task, init_unlimited])
 worker.then(function(results) {
 	console.log('Current node started and unlimited: ', results[1].unlimited)
-	console.log(' - ', results[0], 'supported')
+	console.log('supported tasks:')
+	console.log(results[0])
 	console.log('Done.')
+
+	require('../infra/dbg_register_center.js').report()
 }).catch(err);

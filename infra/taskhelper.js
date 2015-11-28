@@ -73,9 +73,14 @@ function decode_task_fields(taskDef) {
 	return taskDef
 }
 
-
 module.exports = {
 	version: '1.1',
+
+	// DONT Modify These Constants !
+	TASK_BLANK: "task:99914b932bd37a50b983c5e7c90ae93b",	// {}
+	TASK_SELF: "task:6934703c3b4d0714b25f4b5e6148c11a",		// {"promised":"return self"}
+	TASK_RESOURCE: "task:01d13608d51c57d757ce4c630952f49a",	// {"promised":"return resource"}
+	LOGGER: "!",
 
 	encode: function(task) {
 		return JSON.stringify(encode_task_fields(task))
@@ -91,6 +96,10 @@ module.exports = {
 
 	map: function(distributionScope, task, args) {
 		return { map: task, scope: distributionScope, arguments: args}
+	},
+
+	require: function(resId) {
+		return this.run(this.TASK_RESOURCE, resId)
 	},
 
 	reduce: function(distributionScope, task, args, reduce) {
