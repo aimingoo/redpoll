@@ -316,9 +316,9 @@ function distributed_task(taskDef) {
 					value.map = taskId
 				}
 				else if (value instanceof Array) {
-					value.forEach(replace_self)
+					value.forEach(replace_task_self)
 				}
-				else replace_self(value)
+				else replace_task_self(value)
 			}
 		}
 	}

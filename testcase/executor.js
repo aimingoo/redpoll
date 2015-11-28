@@ -20,10 +20,13 @@ var success = function(taskResult) {
 };
 
 // fail of execute_task
+//	> # show error stack at bash
+//	> curl -s '.../execute_task:c2eb2597e461aa3aa0e472f52e92fe0b' | jq '.reason' | xargs echo -e
 var ERR_HTTP_HEADER = {"Content-Type": 'application/json'}
 var error = function(reason) {
+	var reason = reason || {}
 	this.writeHead(500, ERR_HTTP_HEADER);
-	this.write(JSON.stringify({error: 500, reason: reason}));
+	this.write(JSON.stringify({error: 500, reason: reason.stack || reason.message || JSON.stringify(reason)}));
 	this.end()
 };
 
