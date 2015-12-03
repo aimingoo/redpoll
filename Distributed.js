@@ -96,9 +96,9 @@ reserved_tokens[def.LOGGER] = function(message) {
 	var e_stack = msg && msg.reason;
 	var header = now.toLocaleDateString() + ' ' + now.toLocaleTimeString() + ' [error] '
 		+ (! msg.action ? '' : msg.action)
+		+ (! msg.to     ? '' : ' the ' + msg.to)
 		+ (! msg.scope  ? '' : ' in ' + msg.scope)
-		+ (! msg.task   ? '' : ' at ' + msg.task)
-		+ (! msg.to     ? '' : ' to ' + msg.to);
+		+ (! msg.task   ? '' : ' at ' + msg.task);
 	console.log(header + ', ' + (e && e.stack || e || 'no reason.'))
 }
 
@@ -174,16 +174,16 @@ function pickTaskResult(taskOrder) {
 }
 
 function kickTaskOrder(reason) {
-	var worker = this[0], order = this[1]
-	if (! order.rejected) return Promise.reject(reason);
+	var worker = this[0], taskOrder = this[1]
+	if (! taskOrder.rejected) return Promise.reject(reason);
 
 	try { // mute by taskDef.rejected
-		return order.rejected.call(worker, reason)
+		return taskOrder.rejected.call(worker, reason)
 	}
 	catch (e) {
 		var reason = {reason: reason, action: 'taskDef'};
 		var reason2 = {reason: e, action: 'taskDef:rejected'}, task = taskOrder.taskId || "local task";
-		if (order.taskId) reason.task = reason2.task = order.taskId;
+		if (taskOrder.taskId) reason.task = reason2.task = taskOrder.taskId;
 		return Promise.all([this.default_rejected(reason), this.default_rejected(reason2)]
 			.then(reject_me.bind("taskDef rejected exception '" + e.message + "' at " + task)));
 	}
@@ -494,7 +494,7 @@ D.prototype = mix(Object.create(def), {
 		}
 		var scope = worker.require(distributionScope).catch(rejected_scope)
 		var args2 = Promise.resolve(args).catch(rejected_arguments)
-		return Promise.all([worker, scope, taskId, args2])
+		return Promise.all([scope, taskId, args2])
 			.then(enter(worker.distributed_request, rejected_responses))
 			.then(enter(extractMapedTaskResult, rejected_extract))
 	},

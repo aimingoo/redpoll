@@ -27,18 +27,7 @@ function localTask(args) {
 	console.log('[INFO] arguments for loacalTask: ', args)
 	return "HELLO"
 }
-function set_remote_logger(taskId) {
-	pedt.upgrade({ system_route: {
-		[pedt.LOGGER]: function(message) {  // a new remote logger
-			return this.map(conf.remote_logger_scope, taskId, {message: JSON.stringify(message)});
-		}
-	}})
-	return taskId
-}
 var reged_task = Promise.all([
-	// pedt.upgrade({ system_route: {[pedt.LOGGER]: Promise.resolve(false)}}),
-	// pedt.upgrade({ default_rejected: Promise.reject.bind(Promise) }),
-	// pedt.register_task(def.encode({promised: function(r){console.log(r.message); return true}})).then(set_remote_logger) // task_logger
 	pedt.register_task(def.encode({
 		p1: 'default value',
 		info: def.run(localTask, {p1: 'new value'})
@@ -47,16 +36,31 @@ var reged_task = Promise.all([
 	pedt.register_task(def.encode({promised: function(taskResult){return this.run(this.decode(this.encode(taskResult)))}})) // task_runner
 ]);
 
+// - upgrade and/or reset logger
+function set_remote_logger(taskId) {
+	pedt.upgrade({ system_route: {
+		[pedt.LOGGER]: function(message) {  // a new remote logger
+			return this.map(conf.remote_logger_scope, taskId, {message: JSON.stringify(message)});
+		}
+	}})
+	return taskId
+}
+var pedt_upgrade = Promise.all([
+	// pedt.upgrade({ system_route: {[pedt.LOGGER]: Promise.resolve(false)}}),
+	// pedt.upgrade({ default_rejected: Promise.reject.bind(Promise) })
+	// pedt.register_task(def.encode({promised: function(r){console.log(r.message); return true}})).then(set_remote_logger) // task_logger
+]);
+
 // - upgrade to unlimited
 var init_unlimited = pedt.run(localTaskObject);
 
 // - Done
-var worker = Promise.all([reged_task, init_unlimited])
+var worker = Promise.all([reged_task, pedt_upgrade, init_unlimited])
 worker.then(function(results) {
-	console.log('Current node started and unlimited: ', results[1].unlimited)
+	console.log('Current node started and unlimited: ', results[2].unlimited)
 	console.log('supported tasks:')
 	console.log(results[0])
 	console.log('Done.')
 
-	require('../infra/dbg_register_center.js').report()
+//	require('../infra/dbg_register_center.js').report()
 }).catch(err);

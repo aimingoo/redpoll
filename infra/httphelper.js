@@ -80,7 +80,7 @@ function asQuery(obj) {
 }
 
 function distributed_request(arrResult) {
-	var pedt = arrResult[0], URLs = arrResult[1], taskId = arrResult[2], args = arrResult[3];
+	var URLs = arrResult[0], taskId = arrResult[1], args = arrResult[2];
 	var query = args && asQuery(args);
 	return Promise.all(URLs.map(promisedRequest.bind([taskId, asRequest(query)])))
 }

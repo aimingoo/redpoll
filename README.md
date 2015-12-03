@@ -6,25 +6,25 @@ PEDT v1.1 specifications supported.
 
 ### Table of Contents
 
-  * [install](#install)
-  * [import and usage](#import-and-usage)
-  * [options](#options)
-  * [interfaces](#interfaces)
-    * [pedt.run](#pedtrun)
-    * [pedt.map](#pedtmap)
-    * [pedt.execute_task](#pedtexecute_task)
-    * [pedt.register_task](#pedtregister_task)
-    * [pedt.require](#pedtrequire)
-    * [pedt.upgrade](#pedtupgrade)
-    * [pedt.LOGGER](#pedtlogger)
-    * [pedt.TASK_XXX](#pedttask_xxx)
-    * [pedt.version](#pedtversion)
-  * [helpers](#helpers)
-    * [Redpoll.infra.taskhelper](#redpollinfrataskhelper)
-    * [Redpoll.infra.httphelper](#redpollinfrahttphelper)
-    * [Redpoll.infra.requestdata](#redpollinfrarequestdata)
-  * [testcase](#testcase)
-  * [history](#history)
+* [install](#install)
+* [import and usage](#import-and-usage)
+* [options](#options)
+* [interfaces](#interfaces)
+  * [pedt.run](#pedtrun)
+  * [pedt.map](#pedtmap)
+  * [pedt.execute_task](#pedtexecute_task)
+  * [pedt.register_task](#pedtregister_task)
+  * [pedt.require](#pedtrequire)
+  * [pedt.upgrade](#pedtupgrade)
+  * [pedt.LOGGER](#pedtlogger)
+  * [pedt.TASK_XXX](#pedttask_xxx)
+  * [pedt.version](#pedtversion)
+* [helpers](#helpers)
+  * [Redpoll.infra.taskhelper](#redpollinfrataskhelper)
+  * [Redpoll.infra.httphelper](#redpollinfrahttphelper)
+  * [Redpoll.infra.requestdata](#redpollinfrarequestdata)
+* [testcase](#testcase)
+* [history](#history)
 
 # install
 
@@ -277,11 +277,13 @@ try these:
 # history
 
 ``` text
+2015.12.04	v1.1.2 released.
+	- minor udpate
 2015.11.28	v1.1.0 released.
 	- recursion taskDef supported, def.TASK_SELF point to self.
 	- def.require() supported, and other def.XXX constants published.
 	- standard logger and rejected inject.
 	- taskDef.rejected supported.
+    - "taskId" field for taskOrder/taskResult supported.
 2015.11.07	v1.0.0 released.
 ```
-
